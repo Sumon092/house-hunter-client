@@ -19,7 +19,7 @@ const Home = () => {
   const fetchHouses = async () => {
     try {
       const response = await axios.get(
-        "https://house-hounter-server.vercel.app/api/v1/owners/houses"
+        "http://localhost:5000/api/v1/owners/houses"
       );
       setHouses(response.data);
     } catch (error) {

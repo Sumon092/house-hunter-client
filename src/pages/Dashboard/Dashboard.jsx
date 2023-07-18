@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+// import useAuth from "../../hooks/useAuth";
 
 const Dashboard = () => {
+  // const {data}=useAuth()
+  // console.log(data?.ownedHouses.map(house=>house));
   const [ownedHouses, setOwnedHouses] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -20,7 +23,7 @@ const Dashboard = () => {
   const fetchOwnedHouses = async () => {
     try {
       const response = await axios.get(
-        "https://house-hounter-server.vercel.app/api/v1/owners/houses"
+        "http://localhost:5000/api/v1/owners/houses"
       );
       setOwnedHouses(response.data);
     } catch (error) {
@@ -35,35 +38,59 @@ const Dashboard = () => {
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/v1/houses", formData);
-      const newHouse = response.data;
-      setOwnedHouses([...ownedHouses, newHouse]);
-      setFormData({
-        name: "",
-        address: "",
-        city: "",
-        bedrooms: 0,
-        bathrooms: 0,
-        roomSize: "",
-        picture: "",
-        availabilityDate: "",
-        rentPerMonth: 0,
-        phoneNumber: "",
-        description: "",
-      });
+      
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/owners/addHouse",
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-type": "application/json",
+          },
+        }
+      );
+      // Handle success, show message, redirect, etc.
+      console.log("House added successfully", response.data);
     } catch (error) {
-      console.log(error);
+      // Handle error, show error message, etc.
+      console.error("Error adding house", error.response.data);
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/api/v1/owners/addHouse", formData);
+  //     const newHouse = response.data;
+  //     console.log(newHouse);
+  //     setFormData({
+  //       name: "",
+  //       address: "",
+  //       city: "",
+  //       bedrooms: 0,
+  //       bathrooms: 0,
+  //       roomSize: "",
+  //       picture: "",
+  //       availabilityDate: "",
+  //       rentPerMonth: 0,
+  //       phoneNumber: "",
+  //       description: "",
+        
+  //     });
+  //     console.log("house added");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleDelete = async (houseId) => {
     try {
-      await axios.delete(`/api/v1/houses/${houseId}`);
+      await axios.delete(`http://localhost:5000/api/v1/owners/deleteHouse/${houseId}`);
       setOwnedHouses(ownedHouses.filter((house) => house._id !== houseId));
+      console.log('house deleted');
     } catch (error) {
       console.log(error);
     }
