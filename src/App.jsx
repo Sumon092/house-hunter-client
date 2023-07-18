@@ -37,6 +37,14 @@ function App() {
               }
             ></Route>
             <Route
+              path="/dashboard"
+              element={
+                <RequireAuth>
+                  <ConfirmBooking />
+                </RequireAuth>
+              }
+            ></Route>
+            <Route
               path="/booking"
               element={
                 <RequireAuth>

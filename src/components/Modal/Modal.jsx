@@ -3,12 +3,13 @@ import Form from "../Form/Form";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
+import Loading from "../Loading/Loading";
 
 // eslint-disable-next-line react/prop-types
 const Modal = () => {
     const [showModal, setShowModal] = useState(false);
-    const {refetch}=useAuth()
-  const handleModal = async (data) => {
+    const {refetch,isLoading}=useAuth()
+    const handleModal = async (data) => {
     try {
       await axios.post(
         "http://localhost:5000/api/v1/owners/addHouse",
@@ -18,12 +19,11 @@ const Modal = () => {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 "Content-type": "application/json",
             },
-        },
+          },   
       );
-      toast.success("House added successfully!");
     setShowModal(false)
     refetch()
-    
+    {isLoading && <Loading/>}
     } catch (error) {
       
       toast.error("Failed to add house.");
@@ -40,7 +40,7 @@ const Modal = () => {
         onChange={() => setShowModal(!showModal)}
       />
 
-      {/* Modal Content */}
+      
       <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <label
@@ -52,6 +52,7 @@ const Modal = () => {
           <h1 className="text-2xl font-folder text-center my-4 text-info">
             Add House
           </h1>
+          
           <Form handleModal={handleModal} />
         </div>
       </div>
