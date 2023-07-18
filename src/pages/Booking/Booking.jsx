@@ -22,7 +22,6 @@ const Booking = () => {
       });
   }, []);
   const bookedHouses = bookings.map((bookedHouse) => bookedHouse.houseId);
-  console.log(bookedHouses);
 
   const { data, refetch, isLoading } = useQuery("houses", () =>
     fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
@@ -32,7 +31,6 @@ const Booking = () => {
 
   useEffect(() => {
     if (data) {
-      // Filter houses based on bookedHouses
       const filteredHouses = data.filter((house) =>
         bookedHouses.includes(house._id)
       );
@@ -48,10 +46,10 @@ const Booking = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  console.log(houses.map((house) => house.address));
   return (
     <div className="mt-24">
-      <h2 className="text-2xl font-bold mb-4">Booked Houses</h2>
+      <h2 className="text-2xl font-bold mb-4">Booked Houses of yours</h2>
+
       {bookings.length === 0 ? (
         <p>No houses booked yet.</p>
       ) : (
@@ -89,15 +87,8 @@ const Booking = () => {
                     className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
                     // onClick={() => handleDelete(house._id)}
                   >
-                    Delete
+                    cancel
                   </button>
-                  <label
-                    htmlFor="update-modal"
-                    // onClick={() => handleEdit(house)}
-                    className="btn btn-sm py-2 px-4  text-white font-bold mr-2 bg-blue-500"
-                  >
-                    Edit
-                  </label>
                 </td>
               </tr>
             ))}

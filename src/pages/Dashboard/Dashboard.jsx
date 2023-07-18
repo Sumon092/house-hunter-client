@@ -9,8 +9,33 @@ import Loading from "../../components/Loading/Loading";
 const Dashboard2 = () => {
   const [houses, setHouses] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState(null);
+  const [owners,setOwners]=useState({})
   
+  // !
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    axios.interceptors.request.use((config) => {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      return config;
+    });
   
+    try {
+      axios
+        .get("http://localhost:5000/api/v1/users/user")
+        .then((response) => {
+          setOwners(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching owners data:", error);
+        });
+    } catch (error) {
+      console.error("Error fetching owners data:", error);
+    }
+  }, []);
+  
+  const houseOwner= owners.ownedHouses
+  console.log(houseOwner);
+  // !
   
   const { data, refetch ,isLoading} = useQuery("houses", () =>
   
@@ -20,12 +45,17 @@ const Dashboard2 = () => {
   );
   useEffect(() => {
     if (data) {
-      setHouses(data);
+      const ownedHouseIds = owners?.ownedHouses || [];
+      const filteredHouses = data.filter((house) =>
+      ownedHouseIds.includes(house._id)
+    );
+      setHouses(filteredHouses);
     }
-  }, [data]);
+  }, [owners,data]);
+
   refetch()
   
-
+  
   const handleDelete = async (houseId) => {
     try {
       await axios.delete(
