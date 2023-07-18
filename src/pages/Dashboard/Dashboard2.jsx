@@ -7,7 +7,7 @@
 
 //   useEffect(() => {
 //     // Fetch ownedHouses data from the API and store it in state
-//     axios.get("http://localhost:5000/api/v1/users/user")
+//     axios.get("https://house-hounter-server.vercel.app/users/user")
 //       .then((response) => {
 //         // Extract house IDs from ownedHouses and fetch complete house data for each ID
 //         const houseIds = response.data.ownedHouses.map((house) => house._id);
@@ -22,7 +22,7 @@
 //   const fetchCompleteHouseData = (houseIds) => {
 //     // Fetch complete house data for each house ID
 //     const promises = houseIds.map((houseId) =>
-//       axios.get(`http://localhost:5000/api/v1/houses/${houseId}`)
+//       axios.get(`https://house-hounter-server.vercel.app/houses/${houseId}`)
 //     );
 
 //     Promise.all(promises)

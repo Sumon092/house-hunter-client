@@ -13,7 +13,7 @@ const Booking = () => {
       return config;
     });
     axios
-      .get("http://localhost:5000/api/v1/renters/booked")
+      .get("https://house-hounter-server.vercel.app/renters/booked")
       .then((response) => {
         setBookings(response.data);
       })
@@ -24,7 +24,7 @@ const Booking = () => {
   const bookedHouses = bookings.map((bookedHouse) => bookedHouse.houseId);
 
   const { data, refetch, isLoading } = useQuery("houses", () =>
-    fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
+    fetch("https://house-hounter-server.vercel.app/owners/houses").then((res) =>
       res.json()
     )
   );

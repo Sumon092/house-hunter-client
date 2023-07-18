@@ -12,7 +12,7 @@ const Modal = () => {
     const handleModal = async (data) => {
     try {
       await axios.post(
-        "http://localhost:5000/api/v1/owners/addHouse",
+        "https://house-hounter-server.vercel.app/owners/addHouse",
         data,
         {
             headers: {
