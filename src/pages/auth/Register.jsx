@@ -1,8 +1,11 @@
 import { useForm } from 'react-hook-form';
 import 'daisyui/dist/full.css';
 import axios from 'axios';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const Register = () => {
+    const [errorMessage, setErrorMessage] = useState('');
   const {
     register,
     handleSubmit,
@@ -17,6 +20,10 @@ const Register = () => {
         console.log(response.data);
       } catch (error) {
         console.log(error);
+        if (error.response.status === 409) {
+            setErrorMessage('Email already exists. Please choose a different email.');
+            toast.error("Email Already Exist")
+          } 
       }
     reset();
   };
@@ -25,7 +32,10 @@ const Register = () => {
     <div className="flex h-screen justify-center items-center bg-teal-500">
       <div className="card w-96 bg-base-100 shadow-xl p-6">
         <div className="card-body">
-          <h2 className="text-center text-3xl font-bold text-white mb-6">Sign Up</h2>
+          <h2 className="text-center text-3xl font-bold text-white mb-6">Register</h2>
+          {errorMessage && (
+            <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
+          )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
               <label className="label">
@@ -119,7 +129,7 @@ const Register = () => {
             </div>
 
             <button className="btn btn-info btn-outline hover:text-white w-full mt-8">
-              Sign Up
+              Register
             </button>
           </form>
         </div>
