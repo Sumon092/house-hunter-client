@@ -4,6 +4,7 @@ import { RequireContext } from "../../App";
 const Header = () => {
   const { auth} = useContext(RequireContext);
   return (
+    <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
     <div className="navbar bg-base-100 lg:px-12 shadow-lg">
       <div className="flex-1">
         <a href="/" className="btn btn-ghost normal-case text-xl">
@@ -29,6 +30,7 @@ const Header = () => {
         </ul>
       </div>
     </div>
+    </nav>
   );
 };
 

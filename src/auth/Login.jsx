@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -91,6 +92,9 @@ const Login = () => {
             <button className="btn btn-info btn-outline hover:text-white w-full mt-8">
               Login
             </button>
+            <h5 className='text-green-600 text-center mt-2'>Don not have an account? 
+            <Link className='ml-2 text-white text-xl' to="/register">Register</Link>
+            </h5>
           </form>
         </div>
       </div>

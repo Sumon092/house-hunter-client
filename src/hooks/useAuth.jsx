@@ -7,7 +7,7 @@ const useAuth = () => {
   const { data, isLoading, refetch } = useQuery(
     "User",
     async () =>
-      await fetch(`http://localhost:5000/api/v1/users`, {
+      await fetch(`http://localhost:5000/api/v1/users/user`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
