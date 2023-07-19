@@ -7,14 +7,16 @@ import useAuth from "./hooks/useAuth";
 import Layout from "./components/Layout/Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import RequireAuth from "./auth/RequireAuth";
+// import { Toaster } from "react-hot-toast";
 
 export const RequireContext = createContext(null);
 
 function App() {
   const { auth, refetch, user } = useAuth();
   return (
-    <div>
+    <div className=" bg-slate-400">
       <RequireContext.Provider value={{ auth, user, refetch }}>
+        {/* <Toaster> */}
         <Layout>
           <Routes>
             <Route path="/" element={<Home />}></Route>
@@ -31,6 +33,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
           </Routes>
         </Layout>
+        {/* </Toaster> */}
       </RequireContext.Provider>
     </div>
   );
