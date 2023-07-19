@@ -1,159 +1,111 @@
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 const Booking = () => {
-    return (
-        <div className="overflow-x-auto">
-        <table className="table">
-          {/* head */}
+  const [bookings, setBookings] = useState([]);
+  const [houses, setHouses] = useState([]);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    axios.interceptors.request.use((config) => {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      return config;
+    });
+    axios
+      .get("http://localhost:5000/api/v1/renters/booked")
+      .then((response) => {
+        setBookings(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching bookings data:", error);
+      });
+  }, []);
+  const bookedHouses = bookings.map((bookedHouse) => bookedHouse.houseId);
+  console.log(bookedHouses);
+
+  const { data, refetch, isLoading } = useQuery("houses", () =>
+    fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
+      res.json()
+    )
+  );
+
+  useEffect(() => {
+    if (data) {
+      // Filter houses based on bookedHouses
+      const filteredHouses = data.filter((house) =>
+        bookedHouses.includes(house._id)
+      );
+      setHouses(filteredHouses);
+    }
+  }, [data, bookedHouses]);
+
+  // Fetch houses data again on refetch
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  console.log(houses.map((house) => house.address));
+  return (
+    <div className="mt-24">
+      <h2 className="text-2xl font-bold mb-4">Booked Houses</h2>
+      {bookings.length === 0 ? (
+        <p>No houses booked yet.</p>
+      ) : (
+        <table className="w-full bg-white border border-gray-200">
           <thead>
             <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
-              <th></th>
+              <th className="p-4">Name</th>
+              <th className="p-4">Address</th>
+              <th className="p-4">City</th>
+              <th className="p-4">Bedrooms</th>
+              <th className="p-4">Bathrooms</th>
+              <th className="p-4">Room Size</th>
+              <th className="p-4">Availability Date</th>
+              <th className="p-4">Rent per Month</th>
+              <th className="p-4">Phone Number</th>
+              <th className="p-4">Description</th>
+              <th className="p-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img src="/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Hart Hagerty</div>
-                    <div className="text-sm opacity-50">United States</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Zemlak, Daniel and Leannon
-                <br/>
-                <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
-              </td>
-              <td>Purple</td>
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-            {/* row 2 */}
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img src="/tailwind-css-component-profile-3@56w.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Brice Swyre</div>
-                    <div className="text-sm opacity-50">China</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Carroll Group
-                <br/>
-                <span className="badge badge-ghost badge-sm">Tax Accountant</span>
-              </td>
-              <td>Red</td>
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-            {/* row 3 */}
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img src="/tailwind-css-component-profile-4@56w.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Marjy Ferencz</div>
-                    <div className="text-sm opacity-50">Russia</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Rowe-Schoen
-                <br/>
-                <span className="badge badge-ghost badge-sm">Office Assistant I</span>
-              </td>
-              <td>Crimson</td>
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-            {/* row 4 */}
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img src="/tailwind-css-component-profile-5@56w.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Yancy Tear</div>
-                    <div className="text-sm opacity-50">Brazil</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Wyman-Ledner
-                <br/>
-                <span className="badge badge-ghost badge-sm">Community Outreach Specialist</span>
-              </td>
-              <td>Indigo</td>
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
+            {houses?.map((house) => (
+              <tr key={house._id}>
+                <td className="p-4">{house.name}</td>
+                <td className="p-4">{house.address}</td>
+                <td className="p-4">{house.city}</td>
+                <td className="p-4">{house.bedrooms}</td>
+                <td className="p-4">{house.bathrooms}</td>
+                <td className="p-4">{house.roomSize}</td>
+                <td className="p-4">{house.availabilityDate}</td>
+                <td className="p-4">{house.rentPerMonth}</td>
+                <td className="p-4">{house.phoneNumber}</td>
+                <td className="p-4">{house.description}</td>
+                <td className="p-4">
+                  <button
+                    className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
+                    // onClick={() => handleDelete(house._id)}
+                  >
+                    Delete
+                  </button>
+                  <label
+                    htmlFor="update-modal"
+                    // onClick={() => handleEdit(house)}
+                    className="btn btn-sm py-2 px-4  text-white font-bold mr-2 bg-blue-500"
+                  >
+                    Edit
+                  </label>
+                </td>
+              </tr>
+            ))}
           </tbody>
-          {/* foot */}
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
-              <th></th>
-            </tr>
-          </tfoot>
-          
         </table>
-      </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Booking;

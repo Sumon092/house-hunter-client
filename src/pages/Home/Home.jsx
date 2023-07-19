@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import Loading from "../../components/Loading/Loading";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 
 const Home = () => {
-  const { data } = useAuth();
+  const { data, isLoading } = useAuth();
   const [houses, setHouses] = useState([]);
   const [filters, setFilters] = useState({
     city: "",
@@ -31,8 +32,7 @@ const Home = () => {
       throw new Error("Error");
     }
   };
-  const booked = houses.map((house) => house.booked);
-  console.log(booked, "is booked");
+
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
@@ -81,8 +81,6 @@ const Home = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const filteredHouses = filterHouses();
-    console.log(filteredHouses);
   };
 
   const handleBookingSubmit = (houseId) => {
@@ -96,100 +94,104 @@ const Home = () => {
   return (
     <div className="container mx-auto p-12 mt-8">
       <h1 className="text-3xl font-bold mb-4">Houses for Rent</h1>
-      <form onSubmit={handleSubmit} className="mb-4">
-        <div className="flex flex-wrap gap-4">
-          <div className="flex flex-col">
-            <label htmlFor="city" className="block text-gray-700">
-              City:
-            </label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={filters.city}
-              onChange={handleFilterChange}
-              className="w-36 sm:w-48 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500 bg-white"
-            />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <form onSubmit={handleSubmit} className="mb-4">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col">
+              <label htmlFor="city" className="block text-gray-700">
+                City:
+              </label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value={filters.city}
+                onChange={handleFilterChange}
+                className="w-36 sm:w-48 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500 bg-white"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="bedrooms" className="block text-gray-700">
+                Bedrooms:
+              </label>
+              <input
+                type="number"
+                id="bedrooms"
+                name="bedrooms"
+                value={filters.bedrooms}
+                onChange={handleFilterChange}
+                className="w-16 sm:w-24 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="bathrooms" className="block text-gray-700">
+                Bathrooms:
+              </label>
+              <input
+                type="number"
+                id="bathrooms"
+                name="bathrooms"
+                value={filters.bathrooms}
+                onChange={handleFilterChange}
+                className="w-16 sm:w-24 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="roomSize" className="block text-gray-700">
+                Room Size:
+              </label>
+              <input
+                type="text"
+                id="roomSize"
+                name="roomSize"
+                value={filters.roomSize}
+                onChange={handleFilterChange}
+                className="w-36 sm:w-48 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="availability" className="block text-gray-700">
+                Availability Date:
+              </label>
+              <input
+                type="date"
+                id="availability"
+                name="availability"
+                value={filters.availability}
+                onChange={handleFilterChange}
+                className="w-36 sm:w-48 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label htmlFor="rentPerMonth" className="block text-gray-700">
+                Rent Per Month:
+              </label>
+              <input
+                type="number"
+                id="rentPerMonth"
+                name="rentPerMonth"
+                value={filters.rentPerMonth}
+                onChange={handleFilterChange}
+                className="w-16 sm:w-24 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col">
-            <label htmlFor="bedrooms" className="block text-gray-700">
-              Bedrooms:
-            </label>
-            <input
-              type="number"
-              id="bedrooms"
-              name="bedrooms"
-              value={filters.bedrooms}
-              onChange={handleFilterChange}
-              className="w-16 sm:w-24 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="bathrooms" className="block text-gray-700">
-              Bathrooms:
-            </label>
-            <input
-              type="number"
-              id="bathrooms"
-              name="bathrooms"
-              value={filters.bathrooms}
-              onChange={handleFilterChange}
-              className="w-16 sm:w-24 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="roomSize" className="block text-gray-700">
-              Room Size:
-            </label>
-            <input
-              type="text"
-              id="roomSize"
-              name="roomSize"
-              value={filters.roomSize}
-              onChange={handleFilterChange}
-              className="w-36 sm:w-48 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="availability" className="block text-gray-700">
-              Availability Date:
-            </label>
-            <input
-              type="date"
-              id="availability"
-              name="availability"
-              value={filters.availability}
-              onChange={handleFilterChange}
-              className="w-36 sm:w-48 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="rentPerMonth" className="block text-gray-700">
-              Rent Per Month:
-            </label>
-            <input
-              type="number"
-              id="rentPerMonth"
-              name="rentPerMonth"
-              value={filters.rentPerMonth}
-              onChange={handleFilterChange}
-              className="w-16 sm:w-24 border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-500 mt-2"
-        >
-          Apply Filters
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-500 mt-2"
+          >
+            Apply Filters
+          </button>
+        </form>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white">
         {filterHouses().map((house) => (

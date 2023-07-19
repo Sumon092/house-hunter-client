@@ -14,9 +14,11 @@ const ConfirmBooking = () => {
     phoneNumber: "",
     houseRenterId: "",
   });
-
+  
+  
   useEffect(() => {
     if (data) {
+      
       const { fullName, email, phoneNumber, _id } = data;
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -31,6 +33,7 @@ const ConfirmBooking = () => {
   const handleAddBooking = async (e) => {
     e.preventDefault();
     try {
+      
       await axios.post(
         `http://localhost:5000/api/v1/renters/addBooking`,
         { ...formData, houseId },
@@ -114,7 +117,7 @@ const ConfirmBooking = () => {
               className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
             />
           </div>
-          <div className="w-full">
+          <div className="hidden">
             <label
               htmlFor="name"
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -131,7 +134,7 @@ const ConfirmBooking = () => {
               className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
             />
           </div>
-          <div className="w-full">
+          <div className="hidden">
             <label
               htmlFor="name"
               className="block text-gray-700 text-sm font-bold mb-2"

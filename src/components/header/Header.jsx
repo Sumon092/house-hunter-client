@@ -4,7 +4,7 @@ import { RequireContext } from "../../App";
 
 
 const Header = () => {
-  const { auth ,data,isLoading} = useContext(RequireContext);
+  const { auth ,data} = useContext(RequireContext);
   
   
   const logOut=()=>{
@@ -23,11 +23,11 @@ const Header = () => {
           {data?.role==="House Renter" && (
               <li className="mr-1">
                 <Link to="/booking" className="font-bold text-xl text-blue-700">
-                  Bookings
+                  Booking
                 </Link>
               </li>
             )}
-          {data?.role==="House Owner"  && isLoading&&(
+          {data?.role==="House Owner"&&(
               <li className="mr-1">
                 <Link to="/dashboard" className="font-bold text-xl text-blue-700">
                   Dashboard

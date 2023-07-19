@@ -4,14 +4,13 @@ import Modal from "../../components/Modal/Modal";
 import UpdateModal from "../../components/Modal/UpdateModal";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
-import useAuth from "../../hooks/useAuth";
 import Loading from "../../components/Loading/Loading";
 
-const Dashboard = () => {
+const Dashboard2 = () => {
   const [houses, setHouses] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState(null);
-  const {data:ownedHouse}=useAuth()
-  console.log(ownedHouse?.ownedHouses._id);
+  
+  
   
   const { data, refetch ,isLoading} = useQuery("houses", () =>
   
@@ -24,6 +23,7 @@ const Dashboard = () => {
       setHouses(data);
     }
   }, [data]);
+  refetch()
   
 
   const handleDelete = async (houseId) => {
@@ -117,4 +117,4 @@ const Dashboard = () => {
     </div>
   );
 };
-export default Dashboard;
+export default Dashboard2;

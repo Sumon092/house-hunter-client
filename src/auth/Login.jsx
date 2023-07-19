@@ -20,22 +20,19 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      console.log(isLoading,'isloading');
       const response = await axios.post(
         "http://localhost:5000/api/v1/users/login",
         data
       );
       localStorage.setItem("accessToken", response.data.token);
-      refetch();
-      
-      console.log(response.data,'data');
+      toast.success("Login successful")
       if (response.data?.role === "House Owner") {
-        console.log('going to dashboard');
         navigate("/dashboard");
       } else {
-        console.log('going to booking');
-        navigate("/bookings");
+        navigate("/booking");
       }
+      
+      refetch();
       
       if (response.status !== 200) { // Modify this line
         toast.error("Invalid Email or Password");
@@ -46,7 +43,6 @@ const Login = () => {
       }
     } finally {
       setIsLoading(false);
-      console.log(isLoading,'isloading');
     }
     reset();
   };
@@ -54,7 +50,7 @@ const Login = () => {
   
   return (
     <div className="flex h-screen justify-center items-center ">
-       {isLoading && <Loading />}
+       
       <div className="card bg-teal-300 shadow-2xl p-6">
         <div className="card-body">
           <h2 className="text-center text-2xl font-bold mb-6">
@@ -63,7 +59,7 @@ const Login = () => {
           {errorMessage && (
             <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
           )}
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {isLoading ? <Loading />:(<form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-bold ">Email</span>
@@ -118,7 +114,8 @@ const Login = () => {
             <h5 className='text-green-600 text-center mt-2'>Don not have an account? 
             <Link className='ml-2 font-bold text-blue-700 text-xl' to="/register">Register</Link>
             </h5>
-          </form>
+          </form>)}
+          
         </div>
       </div>
     </div>

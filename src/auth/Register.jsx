@@ -24,8 +24,13 @@
         );
         
         localStorage.setItem("accessToken", response.data.data.token);
-        navigate("/");
         toast.success("Registration successful")
+        // navigate("/")
+        if (response.data?.data?.role === "House Owner") {
+          navigate("/dashboard");
+        } else {
+          navigate("/booking");
+        }
       } catch (error) {
         
         if (error.response && error.response.status === 409) {
