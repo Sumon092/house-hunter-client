@@ -167,7 +167,7 @@
               </button>
               <h5 className="text-blue text-center mt-2">
                 Already have an account?
-                <Link className="ml-2  text-xl" to="/login">
+                <Link className="ml-2 font-bole text-blue-700  text-xl" to="/login">
                   Login
                 </Link>
               </h5>

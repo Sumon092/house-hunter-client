@@ -1,10 +1,13 @@
+/* eslint-disable no-undef */
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
+  const { refetch } = useAuth();
   const navigate=useNavigate()
   const [errorMessage, setErrorMessage] = useState("");
   const {
@@ -21,9 +24,11 @@ const Login = () => {
         data
       );
       console.log(response.data.token);
-      localStorage.setItem("accessToken",data.token);
+      localStorage.setItem("accessToken", response.data.token);
+      // Trigger the refetch function to fetch user information again
+      refetch();
       navigate("/dashboard");
-      if (data.status !== 200) {
+      if (response.status !== 200) { // Modify this line
         toast.error("Invalid Email or Password");
       }
     } catch (error) {
@@ -33,11 +38,13 @@ const Login = () => {
     }
     reset();
   };
+  
+  
   return (
-    <div className="flex h-screen justify-center items-center bg-teal-500">
-      <div className="card w-96 bg-base-100 shadow-xl p-6">
+    <div className="flex h-screen justify-center items-center ">
+      <div className="card bg-teal-300 shadow-2xl p-6">
         <div className="card-body">
-          <h2 className="text-center text-3xl font-bold text-white mb-6">
+          <h2 className="text-center text-2xl font-bold mb-6">
             Login
           </h2>
           {errorMessage && (
@@ -46,7 +53,7 @@ const Login = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
               <label className="label">
-                <span className="label-text text-lg text-white">Email</span>
+                <span className="label-text font-bold ">Email</span>
                 <input
                   type="email"
                   className={`input input-bordered mt-1 p-2 ${
@@ -70,7 +77,7 @@ const Login = () => {
 
             <div className="form-control">
               <label className="label">
-                <p className="label-text text-lg text-white mr-0">Password</p>
+                <p className="label-text font-bold mr-0">Password</p>
                 <input
                   type="password"
                   className={`input input-bordered mt-1 p-2 ${
@@ -92,11 +99,11 @@ const Login = () => {
               )}
             </div>
 
-            <button className="btn btn-info btn-outline hover:text-white w-full mt-8">
+            <button className="btn btn-primary btn-outline hover:text-white w-full mt-8">
               Login
             </button>
             <h5 className='text-green-600 text-center mt-2'>Don not have an account? 
-            <Link className='ml-2 text-white text-xl' to="/register">Register</Link>
+            <Link className='ml-2 font-bold text-blue-700 text-xl' to="/register">Register</Link>
             </h5>
           </form>
         </div>

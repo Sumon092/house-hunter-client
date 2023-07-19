@@ -13,6 +13,7 @@ export const RequireContext = createContext(null);
 
 function App() {
   const { auth, refetch, user } = useAuth();
+  console.log('auth',auth,'user',user);
   return (
     <div className=" bg-slate-400">
       <RequireContext.Provider value={{ auth, user, refetch }}>

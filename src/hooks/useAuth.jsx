@@ -15,9 +15,9 @@ const useAuth = () => {
   );
   console.log(data);
   useEffect(() => {
-    if (data) {
+    if (data && data.email) {
       setAuth(true);
-      setUser(data?.email);
+      setUser(data.email);
     } else {
       setAuth(false);
     }

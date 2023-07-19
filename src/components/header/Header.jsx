@@ -4,6 +4,7 @@ import { RequireContext } from "../../App";
 
 const Header = () => {
   const { auth } = useContext(RequireContext);
+  console.log(auth);
   return (
     <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
       <div className="navbar bg-gradient-to-r from-blue-500 to-teal-500 lg:px-12 shadow-lg">
