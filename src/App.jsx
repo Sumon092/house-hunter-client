@@ -6,6 +6,7 @@ import { createContext } from "react";
 import useAuth from "./hooks/useAuth";
 import Layout from "./components/Layout/Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import RequireAuth from "./auth/RequireAuth";
 
 export const RequireContext = createContext(null);
 
@@ -15,12 +16,20 @@ function App() {
     <div>
       <RequireContext.Provider value={{ auth, user, refetch }}>
         <Layout>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/dashboard" element={<Dashboard/>}></Route>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+
+            <Route
+              path="/dashboard"
+              element={
+                <RequireAuth>
+                  <Dashboard />
+                </RequireAuth>
+              }
+            ></Route>
+            <Route path="/register" element={<Register />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+          </Routes>
         </Layout>
       </RequireContext.Provider>
     </div>

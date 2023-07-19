@@ -2,9 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate=useNavigate()
   const [errorMessage, setErrorMessage] = useState("");
   const {
     register,
@@ -19,7 +20,9 @@ const Login = () => {
         "http://localhost:5000/api/v1/users/login",
         data
       );
-      console.log(response.data.status);
+      console.log(response.data.token);
+      localStorage.setItem("accessToken",data.token);
+      navigate("/dashboard");
       if (data.status !== 200) {
         toast.error("Invalid Email or Password");
       }
