@@ -19,7 +19,9 @@ const Dashboard = () => {
 
   const fetchOwnedHouses = async () => {
     try {
-      const response = await axios.get("/api/v1/houses");
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/owners/houses"
+      );
       setOwnedHouses(response.data);
     } catch (error) {
       console.log(error);
