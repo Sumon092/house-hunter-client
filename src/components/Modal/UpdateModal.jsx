@@ -26,7 +26,7 @@ const UpdateModal = ({ house, refetch }) => {
       setFormData(house);
     }
   }, [house]);
-  
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -35,7 +35,7 @@ const UpdateModal = ({ house, refetch }) => {
     try {
       await axios.patch(
         // eslint-disable-next-line react/prop-types
-        `http://localhost:5000/api/v1/owners/updateHouse/${house._id}`,
+        `https://house-hounter-client.netlify.app/api/v1/owners/updateHouse/${house._id}`,
         formData,
         {
           headers: {

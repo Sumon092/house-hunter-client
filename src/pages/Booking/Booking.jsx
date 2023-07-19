@@ -14,7 +14,7 @@ const Booking = () => {
       const bookingIdToDelete = cancelId[0];
       try {
         await axios.delete(
-          `http://localhost:5000/api/v1/renters/cancel-booking/${bookingIdToDelete}`
+          `https://house-hounter-client.netlify.app/api/v1/renters/cancel-booking/${bookingIdToDelete}`
         );
         toast.error("Booking cancelled");
         setBookings((prevBookings) =>
@@ -36,7 +36,7 @@ const Booking = () => {
       return config;
     });
     axios
-      .get("http://localhost:5000/api/v1/renters/booked")
+      .get("https://house-hounter-client.netlify.app/api/v1/renters/booked")
       .then((response) => {
         setBookings(response.data);
       })
@@ -52,7 +52,7 @@ const Booking = () => {
   }, [bookings]);
 
   const { data, refetch, isLoading, isError } = useQuery("houses", () =>
-    fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
+    fetch("https://house-hounter-client.netlify.app/api/v1/owners/houses").then((res) =>
       res.json()
     )
   );

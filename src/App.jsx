@@ -11,8 +11,7 @@ import { Toaster } from "react-hot-toast";
 import Booking from "./pages/Booking/Booking";
 import ConfirmBooking from "./components/ConfirmBooking/ConfirmBooking";
 import NotFound from "./components/NotFound/NotFound";
-
-
+import HouseList from "./components/HouseList/HouseList";
 
 export const RequireContext = createContext(null);
 
@@ -28,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/home" element={<Home />}></Route>
+            <Route path="/house-list" element={<HouseList />}></Route>
             <Route
               path="/dashboard"
               element={

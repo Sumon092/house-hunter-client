@@ -5,12 +5,13 @@ import UpdateModal from "../../components/Modal/UpdateModal";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
 import Loading from "../../components/Loading/Loading";
+import formatDate from "../../components/FormatDate/FormatDate";
 
 const Dashboard2 = () => {
   const [houses, setHouses] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState(null);
-  const [owners,setOwners]=useState({})
-  
+  const [owners, setOwners] = useState({});
+
   // !
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -18,10 +19,10 @@ const Dashboard2 = () => {
       config.headers.Authorization = `Bearer ${accessToken}`;
       return config;
     });
-  
+
     try {
       axios
-        .get("http://localhost:5000/api/v1/users/user")
+        .get("https://house-hounter-client.netlify.app/api/v1/users/user")
         .then((response) => {
           setOwners(response.data);
         })
@@ -32,12 +33,11 @@ const Dashboard2 = () => {
       console.error("Error fetching owners data:", error);
     }
   }, []);
-  
+
   // !
-  
-  const { data, refetch ,isLoading} = useQuery("houses", () =>
-  
-    fetch(`http://localhost:5000/api/v1/owners/houses`).then((res) =>
+
+  const { data, refetch, isLoading } = useQuery("houses", () =>
+    fetch(`https://house-hounter-client.netlify.app/api/v1/owners/houses`).then((res) =>
       res.json()
     )
   );
@@ -45,98 +45,109 @@ const Dashboard2 = () => {
     if (data) {
       const ownedHouseIds = owners?.ownedHouses || [];
       const filteredHouses = data.filter((house) =>
-      ownedHouseIds.includes(house._id)
-    );
+        ownedHouseIds.includes(house._id)
+      );
       setHouses(filteredHouses);
     }
-  }, [owners,data]);
+  }, [owners, data]);
 
-  refetch()
-  
-  
+  refetch();
+
   const handleDelete = async (houseId) => {
-    console.log(houseId,'houseId');
+    console.log(houseId, "houseId");
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/owners/deleteHouse/${houseId}`
+        `https://house-hounter-client.netlify.app/api/v1/owners/deleteHouse/${houseId}`
       );
-      
     } catch (error) {
-      throw new Error("delete denied")
+      throw new Error("delete denied");
     }
     refetch();
-    toast.error("House Deleted")
+    toast.error("House Deleted");
   };
   const handleEdit = (house) => {
     setSelectedHouse(house);
   };
 
   return (
-    <div className="p-4 mt-24">
-      <span className="text-sm text-blue text-center ">House owners can not booked house,want to book? create account as a renter</span>
+    <div className="p-4 mt-16">
+      <span className="block text-sm text-error mx-auto text-center mt-0 mb-4">
+        House owners can not book house,want to book? create account as a
+        renter
+      </span>
       <div className="flex justify-between items-center w-full mb-4">
-        <h1 className="text-3xl font-bold text-center flex-1">Owned Houses</h1>
+        <h1 className="text-3xl font-bold text-center flex-start">Owned Houses</h1>
         <div className="flex">
           <label
             htmlFor="house-modal"
-            className="btn btn-lg btn-primary text-white font-bold mb-4"
+            className="btn btn-md btn-error text-white font-bold mb-4"
           >
             Add New House
           </label>
           <Modal refetch={refetch}></Modal>
         </div>
       </div>
-      {isLoading ? <Loading />:( <table className="w-full bg-white border border-gray-200">
-        <thead>
-          <tr>
-            <th className="p-4">Name</th>
-            <th className="p-4">Address</th>
-            <th className="p-4">City</th>
-            <th className="p-4">Bedrooms</th>
-            <th className="p-4">Bathrooms</th>
-            <th className="p-4">Room Size</th>
-            <th className="p-4">Availability Date</th>
-            <th className="p-4">Rent per Month</th>
-            <th className="p-4">Phone Number</th>
-            <th className="p-4">Description</th>
-            <th className="p-4">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {houses?.map((house) => (
-            
-            <tr key={house._id}>
-              <td className="p-4">{house.name}</td>
-              <td className="p-4">{house.address}</td>
-              <td className="p-4">{house.city}</td>
-              <td className="p-4">{house.bedrooms}</td>
-              <td className="p-4">{house.bathrooms}</td>
-              <td className="p-4">{house.roomSize}</td>
-              <td className="p-4">{house.availabilityDate}</td>
-              <td className="p-4">{house.rentPerMonth}</td>
-              <td className="p-4">{house.phoneNumber}</td>
-              <td className="p-4">{house.description}</td>
-              <td className="p-4">
-                <button
-                  className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
-                  onClick={() => handleDelete(house._id)}
-                >
-                  Delete
-                </button>
-                <label
-                  htmlFor="update-modal"
-                  onClick={() => handleEdit(house)}
-                  className="btn btn-sm py-2 px-4  text-white font-bold mr-2 bg-blue-500"
-                >
-                  
-                  Edit
-                </label>
-              </td>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <table className="w-full  border border-gray-300 rounded block p-4">
+          <thead>
+            <tr>
+              <th className="p-2 ">Name</th>
+              <th className="p-2">Address</th>
+              <th className="p-2">City</th>
+              <th className="p-2">Bedrooms</th>
+              <th className="p-2">Bathrooms</th>
+              <th className="p-2">Room Size</th>
+              <th className="p-2">Availability Date</th>
+              <th className="p-2">Rent per Month</th>
+              <th className="p-2">Phone Number</th>
+              <th className="p-2">Description</th>
+              <th className="p-2">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>)}
-     
+          </thead>
+          <tbody >
+            {houses?.map((house) => (
+              <tr key={house._id} className="border border-gray-300 rounded">
+                <td className="p-2">{house.address}</td>
+                <td className="p-2">{house.city}</td>
+                <td className="p-2">{house.name}</td>
+                <td className="p-2">{house.bedrooms}</td>
+                <td className="p-2">{house.bathrooms}</td>
+                <td className="p-2">{house.roomSize}</td>
+                <td className="p-2">{formatDate(house.availabilityDate)}</td>
+                <td className="p-2">{house.rentPerMonth}</td>
+                <td className="p-2">{house.phoneNumber}</td>
+                <td className="p-2">{house.description}</td>
+                <td className="p-2">
+                  <div className="flex justify-between">
+                    <div>
+                    <button
+                    className="bg-red-500 text-white p-1 px-2 rounded w-20"
+                    onClick={() => handleDelete(house._id)}
+                  >
+                    Delete
+                  </button>
+                    </div>
+                    <div className="ml-2">
+                    <label
+                    htmlFor="update-modal"
+                    onClick={() => handleEdit(house)}
+                    className="btn btn-sm py-2 px-4  text-white font-bold bg-blue-500"
+                  >
+                    Edit
+                  </label>
+                    </div>
+                  </div>
+                 
+                  
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
       {selectedHouse && (
         <UpdateModal
           house={selectedHouse}
@@ -148,4 +159,3 @@ const Dashboard2 = () => {
   );
 };
 export default Dashboard2;
-

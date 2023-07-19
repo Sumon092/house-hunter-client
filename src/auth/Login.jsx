@@ -21,7 +21,7 @@ const Login = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:5000/api/v1/users/login",
+        "https://house-hounter-client.netlify.app/api/v1/users/login",
         data
       );
       localStorage.setItem("accessToken", response.data.token);

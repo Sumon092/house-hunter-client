@@ -32,7 +32,7 @@ const ConfirmBooking = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `http://localhost:5000/api/v1/renters/addBooking`,
+        `https://house-hounter-client.netlify.app/api/v1/renters/addBooking`,
         { ...formData, houseId },
         {
           headers: {
@@ -48,11 +48,10 @@ const ConfirmBooking = () => {
       }
       toast.success("Booking Successful");
       refetch();
-      navigate("/");
-
       if (data.status == 500) {
         return toast.error("House Already Booked");
       }
+      navigate("/");
     } catch (error) {
       toast.error("Failed to create booking");
       console.error(error);
@@ -105,7 +104,7 @@ const ConfirmBooking = () => {
           </div>
           <div className="w-full">
             <label
-              htmlFor="name"
+              htmlFor="phoneNumber"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
               Phone Number:

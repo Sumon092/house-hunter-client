@@ -7,7 +7,7 @@ const useAuth = () => {
   const { data, isLoading, refetch } = useQuery(
     "User",
     async () =>
-      await fetch(`http://localhost:5000/api/v1/users/user`, {
+      await fetch(`https://house-hounter-client.netlify.app/api/v1/users/user`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -22,7 +22,7 @@ const useAuth = () => {
     }
   }, [data]);
 
-  return { auth, refetch, user, isLoading,data };
+  return { auth, refetch, user, isLoading, data };
 };
 
 export default useAuth;
