@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "../../components/Modal/Modal";
 import UpdateModal from "../../components/Modal/UpdateModal";
 import { useQuery } from "react-query";
 
 const Dashboard = () => {
-  const [house, setHouse] = useState([]);
-
-  const { data: houses, refetch } = useQuery("houses", () =>
+  const [houses, setHouses] = useState([]);
+  const [selectedHouse, setSelectedHouse] = useState(null);
+  const { data, refetch } = useQuery("houses", () =>
     fetch(`http://localhost:5000/api/v1/owners/houses`).then((res) =>
       res.json()
     )
   );
+  useEffect(() => {
+    if (data) {
+      setHouses(data);
+    }
+  }, [data]);
+
   const handleDelete = async (houseId) => {
     try {
       await axios.delete(
@@ -22,6 +28,9 @@ const Dashboard = () => {
       console.log(error);
     }
     refetch();
+  };
+  const handleEdit = (house) => {
+    setSelectedHouse(house);
   };
 
   return (
@@ -36,7 +45,6 @@ const Dashboard = () => {
             Add New House
           </label>
           <Modal></Modal>
-          <UpdateModal house={house} setHouse={setHouse}></UpdateModal>
         </div>
       </div>
       <table className="w-full bg-white border border-gray-200">
@@ -75,14 +83,26 @@ const Dashboard = () => {
                 >
                   Delete
                 </button>
-                <button className="bg-blue-500 text-white ml-4 py-4 px-4 rounded w-20">
+                <label
+                  htmlFor="update-modal"
+                  onClick={() => handleEdit(house)}
+                  className="btn btn-sm py-2 px-4  text-white font-bold mr-2 bg-blue-500"
+                >
+                  
                   Edit
-                </button>
+                </label>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {selectedHouse && (
+        <UpdateModal
+          house={selectedHouse}
+          setHouse={setHouses}
+          refetch={refetch}
+        />
+      )}
     </div>
   );
 };

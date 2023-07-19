@@ -20,7 +20,7 @@ const Form = ({ handleModal }) => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  console.log(initialFormData);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,6 @@ const Form = ({ handleModal }) => {
       setFormData(initialFormData);
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
       toast.error("Failed to add house.");
     }
   };
