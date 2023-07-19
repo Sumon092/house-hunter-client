@@ -29,7 +29,7 @@
         if (response.data?.data?.role === "House Owner") {
           navigate("/dashboard");
         } else {
-          navigate("/booking");
+          navigate("/");
         }
       } catch (error) {
         

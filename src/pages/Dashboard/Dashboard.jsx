@@ -73,6 +73,7 @@ const Dashboard2 = () => {
 
   return (
     <div className="p-4 mt-24">
+      <span className="text-sm text-blue text-center ">House owners can not booked house,want to book? create account as a renter</span>
       <div className="flex justify-between items-center w-full mb-4">
         <h1 className="text-3xl font-bold text-center flex-1">Owned Houses</h1>
         <div className="flex">

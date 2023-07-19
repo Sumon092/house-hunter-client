@@ -7,16 +7,25 @@ const Booking = () => {
   const [bookings, setBookings] = useState([]);
   const [houses, setHouses] = useState([]);
 
-  const handleCancel = async (bookingIdToDelete) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/v1/renters/cancel-booking/${bookingIdToDelete}`);
-      toast.error("Booking cancelled");
-      setBookings((prevBookings) =>
-        prevBookings.filter((booking) => booking._id !== bookingIdToDelete)
-      );
-      refetch();
-    } catch (error) {
-      throw new Error("Cancel denied");
+  const cancelId = bookings?.map((i) => i?._id) || [];
+
+  const handleCancel = async () => {
+    if (cancelId.length > 0) {
+      const bookingIdToDelete = cancelId[0];
+      try {
+        await axios.delete(
+          `http://localhost:5000/api/v1/renters/cancel-booking/${bookingIdToDelete}`
+        );
+        toast.error("Booking cancelled");
+        setBookings((prevBookings) =>
+          prevBookings.filter((booking) => booking._id !== bookingIdToDelete)
+        );
+        refetch();
+      } catch (error) {
+        throw new Error("cancel denied");
+      }
+    } else {
+      console.log("No bookings to cancel.");
     }
   };
 
@@ -37,16 +46,22 @@ const Booking = () => {
   }, []);
 
   const bookedHouseIds = useMemo(() => {
-    return bookings.length > 0 ? bookings.map((bookedHouse) => bookedHouse.houseId) : [];
+    return bookings.length > 0
+      ? bookings.map((bookedHouse) => bookedHouse.houseId)
+      : [];
   }, [bookings]);
 
   const { data, refetch, isLoading, isError } = useQuery("houses", () =>
-    fetch("http://localhost:5000/api/v1/owners/houses").then((res) => res.json())
+    fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
+      res.json()
+    )
   );
 
   useEffect(() => {
     if (data) {
-      const bookedHousesData = data.filter((house) => bookedHouseIds.includes(house._id));
+      const bookedHousesData = data.filter((house) =>
+        bookedHouseIds.includes(house._id)
+      );
       setHouses(bookedHousesData);
     }
   }, [data, bookedHouseIds]);
@@ -102,7 +117,7 @@ const Booking = () => {
                 <td className="p-4">
                   <button
                     className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
-                    onClick={() => handleCancel(bookedHouseIds)}
+                    onClick={() => handleCancel(cancelId)}
                   >
                     Cancel
                   </button>

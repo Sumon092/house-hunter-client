@@ -14,11 +14,9 @@ const ConfirmBooking = () => {
     phoneNumber: "",
     houseRenterId: "",
   });
-  
-  
+
   useEffect(() => {
     if (data) {
-      
       const { fullName, email, phoneNumber, _id } = data;
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -33,7 +31,6 @@ const ConfirmBooking = () => {
   const handleAddBooking = async (e) => {
     e.preventDefault();
     try {
-      
       await axios.post(
         `http://localhost:5000/api/v1/renters/addBooking`,
         { ...formData, houseId },
@@ -44,11 +41,17 @@ const ConfirmBooking = () => {
           },
         }
       );
+      console.log(data, "data from booking");
+      if (data && data?.rentedBookingCount >= 2) {
+        toast.error("You can booked maximum two house");
+        return;
+      }
       toast.success("Booking Successful");
       refetch();
       navigate("/");
-      if(data.status==500){
-        return toast.error("House Already Booked")
+
+      if (data.status == 500) {
+        return toast.error("House Already Booked");
       }
     } catch (error) {
       toast.error("Failed to create booking");

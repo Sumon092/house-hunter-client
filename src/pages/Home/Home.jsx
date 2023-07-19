@@ -22,6 +22,7 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   useEffect(() => {
     fetchHouses();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage,filters]);
 
   const fetchHouses = async () => {
