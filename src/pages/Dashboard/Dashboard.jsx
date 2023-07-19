@@ -44,7 +44,7 @@ const Dashboard = () => {
           >
             Add New House
           </label>
-          <Modal></Modal>
+          <Modal refetch={refetch}></Modal>
         </div>
       </div>
       <table className="w-full bg-white border border-gray-200">

@@ -22,12 +22,12 @@ const Header = () => {
           <ul className="menu menu-horizontal p-0">
           {data?.role==="House Renter" && (
               <li className="mr-1">
-                <Link to="/dashboard" className="font-bold text-xl text-blue-700">
+                <Link to="/booking" className="font-bold text-xl text-blue-700">
                   Bookings
                 </Link>
               </li>
             )}
-          {auth && (
+          {data?.role==="House Owner"  && (
               <li className="mr-1">
                 <Link to="/dashboard" className="font-bold text-xl text-blue-700">
                   Dashboard

@@ -1,15 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 // import { toast } from "react-hot-toast";
-import useAuth from "../../hooks/useAuth";
+
 
 
 
 // eslint-disable-next-line react/prop-types
-const UpdateModal = ({house}) => {
-    const {refetch}=useAuth()
+const UpdateModal = ({house,refetch}) => {
     
-    // const [showModal,setShowModal]=useState(false)
+    const [,setShowModal]=useState(false)
 
     const initialFormData = {
         name: "",
@@ -37,6 +36,7 @@ const UpdateModal = ({house}) => {
         e.preventDefault();
         try {
           await axios.patch(
+            // eslint-disable-next-line react/prop-types
             `http://localhost:5000/api/v1/owners/updateHouse/${house._id}`,
             formData,
             {
@@ -44,11 +44,11 @@ const UpdateModal = ({house}) => {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 "Content-type": "application/json",
               },
-            }
+            },
+            refetch()
           );
           console.log("House updated successfully!");
-          // showModal(false); 
-          refetch();
+          setShowModal(false); 
         } catch (error) {
           console.log(error);
           console.error("Failed to update house.");
