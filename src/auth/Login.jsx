@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

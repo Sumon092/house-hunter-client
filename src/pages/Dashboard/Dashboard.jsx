@@ -1,95 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import axios from "axios";
-// import useAuth from "../../hooks/useAuth";
+import Modal from "../../components/Modal/Modal";
+import UpdateModal from "../../components/Modal/UpdateModal";
+import { useQuery } from "react-query";
+
 
 const Dashboard = () => {
-  // const {data}=useAuth()
-  // console.log(data?.ownedHouses.map(house=>house));
-  const [ownedHouses, setOwnedHouses] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    city: "",
-    bedrooms: 0,
-    bathrooms: 0,
-    roomSize: "",
-    picture: "",
-    availabilityDate: "",
-    rentPerMonth: 0,
-    phoneNumber: "",
-    description: "",
-  });
+  
+  const [house,setHouse] = useState([]);
 
-  const fetchOwnedHouses = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/v1/owners/houses"
-      );
-      setOwnedHouses(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchOwnedHouses();
-  }, []);
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/owners/addHouse",
-        formData,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-type": "application/json",
-          },
-        }
-      );
-      // Handle success, show message, redirect, etc.
-      console.log("House added successfully", response.data);
-    } catch (error) {
-      // Handle error, show error message, etc.
-      console.error("Error adding house", error.response.data);
-    }
-  };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post("http://localhost:5000/api/v1/owners/addHouse", formData);
-  //     const newHouse = response.data;
-  //     console.log(newHouse);
-  //     setFormData({
-  //       name: "",
-  //       address: "",
-  //       city: "",
-  //       bedrooms: 0,
-  //       bathrooms: 0,
-  //       roomSize: "",
-  //       picture: "",
-  //       availabilityDate: "",
-  //       rentPerMonth: 0,
-  //       phoneNumber: "",
-  //       description: "",
-        
-  //     });
-  //     console.log("house added");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
+  
+  const { data:houses} = useQuery("houses", () =>
+    fetch(`http://localhost:5000/api/v1/owners/houses`).then((res) =>
+      res.json()
+    )
+  );
   const handleDelete = async (houseId) => {
     try {
       await axios.delete(`http://localhost:5000/api/v1/owners/deleteHouse/${houseId}`);
-      setOwnedHouses(ownedHouses.filter((house) => house._id !== houseId));
       console.log('house deleted');
     } catch (error) {
       console.log(error);
@@ -101,6 +29,14 @@ const Dashboard = () => {
       <h1 className="text-3xl font-bold mb-6 mt-12 text-center">
         Owned Houses
       </h1>
+      {/* <div className="">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-500"
+          >
+            Add House
+          </button>
+        </div> */}
       <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
@@ -118,7 +54,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {ownedHouses.map((house) => (
+          {houses?.map((house) => (
             <tr key={house._id}>
               <td className="p-4">{house.name}</td>
               <td className="p-4">{house.address}</td>
@@ -145,214 +81,14 @@ const Dashboard = () => {
           ))}
         </tbody>
       </table>
-      <h2 className="text-2xl font-bold mt-8 mb-4">Add New House</h2>
-      <form onSubmit={handleSubmit} className="max-w-xs flex flex-wrap">
-        <div className="w-full">
-          <label
-            htmlFor="name"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Name:
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-full">
-          <label
-            htmlFor="address"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Address:
-          </label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-1/2 pr-2">
-          <label
-            htmlFor="city"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            City:
-          </label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-1/2 pl-2">
-          <label
-            htmlFor="bedrooms"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Bedrooms:
-          </label>
-          <input
-            type="number"
-            id="bedrooms"
-            name="bedrooms"
-            value={formData.bedrooms}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-1/2 pr-2">
-          <label
-            htmlFor="bathrooms"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Bathrooms:
-          </label>
-          <input
-            type="number"
-            id="bathrooms"
-            name="bathrooms"
-            value={formData.bathrooms}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-1/2 pl-2">
-          <label
-            htmlFor="roomSize"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Room Size:
-          </label>
-          <input
-            type="text"
-            id="roomSize"
-            name="roomSize"
-            value={formData.roomSize}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-full">
-          <label
-            htmlFor="picture"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Picture:
-          </label>
-          <input
-            type="text"
-            id="picture"
-            name="picture"
-            value={formData.picture}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-1/2 pr-2">
-          <label
-            htmlFor="availabilityDate"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Availability Date:
-          </label>
-          <input
-            type="date"
-            id="availabilityDate"
-            name="availabilityDate"
-            value={formData.availabilityDate}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-1/2 pl-2">
-          <label
-            htmlFor="rentPerMonth"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Rent Per Month:
-          </label>
-          <input
-            type="number"
-            id="rentPerMonth"
-            name="rentPerMonth"
-            value={formData.rentPerMonth}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-full">
-          <label
-            htmlFor="phoneNumber"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Phone Number:
-          </label>
-          <input
-            type="text"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="w-full">
-          <label
-            htmlFor="description"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Description:
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          ></textarea>
-        </div>
-
-        <div className="w-full">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-500"
-          >
-            Add House
-          </button>
-        </div>
-      </form>
+      <label
+              htmlFor="house-modal"
+              className="btn btn-sm btn-success text-white font-bold mt-2"
+            >
+              Add New House
+            </label>
+            <Modal></Modal>
+            <UpdateModal house={house} setHouse={setHouse}></UpdateModal>
     </div>
   );
 };
