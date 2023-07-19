@@ -19,7 +19,7 @@
     const onSubmit = async (data) => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/v1/users/register",
+          "https://house-hounter-server.vercel.app/api/v1/users/register",
           data
         );
         console.log(response.data.data.token);
