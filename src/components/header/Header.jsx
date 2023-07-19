@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { RequireContext } from "../../App";
+import useAuth from "../../hooks/useAuth";
 
 const Header = () => {
   const { auth } = useContext(RequireContext);
+  const {data}=useAuth()
+  
   const logOut=()=>{
     localStorage.removeItem('accessToken')
   }
@@ -17,19 +20,34 @@ const Header = () => {
         </div>
         <div className="flex-none">
           <ul className="menu menu-horizontal p-0">
+          {data?.role==="House Renter" && (
+              <li className="mr-1">
+                <Link to="/dashboard" className="font-bold text-xl text-blue-700">
+                  Bookings
+                </Link>
+              </li>
+            )}
+          {auth && (
+              <li className="mr-1">
+                <Link to="/dashboard" className="font-bold text-xl text-blue-700">
+                  Dashboard
+                </Link>
+              </li>
+            )}
             {auth ? (
               <li className="mr-1">
-                <Link onClick={()=>logOut()} to="/login" className="font-bold">
+                <Link onClick={()=>logOut()} to="/login" className="font-bold text-xl text-blue-700">
                   Logout
                 </Link>
               </li>
             ) : (
               <li className="mr-1">
-                <Link to="/login" className="font-bold text-2xl text-blue-700">
+                <Link to="/login" className="font-bold text-xl text-blue-700">
                   Login
                 </Link>
               </li>
             )}
+            
           </ul>
         </div>
       </div>

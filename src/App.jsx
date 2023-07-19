@@ -12,10 +12,10 @@ import RequireAuth from "./auth/RequireAuth";
 export const RequireContext = createContext(null);
 
 function App() {
-  const { auth, refetch, user } = useAuth();
+  const { auth, refetch, user,data } = useAuth();
   return (
     <div className=" bg-slate-400">
-      <RequireContext.Provider value={{ auth, user, refetch }}>
+      <RequireContext.Provider value={{ auth, user,data ,refetch }}>
         {/* <Toaster> */}
         <Layout>
           <Routes>
