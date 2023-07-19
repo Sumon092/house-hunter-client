@@ -4,7 +4,9 @@ import { RequireContext } from "../../App";
 
 const Header = () => {
   const { auth } = useContext(RequireContext);
-  console.log(auth);
+  const logOut=()=>{
+    localStorage.removeItem('accessToken')
+  }
   return (
     <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
       <div className="navbar bg-gradient-to-r from-blue-500 to-teal-500 lg:px-12 shadow-lg">
@@ -17,7 +19,7 @@ const Header = () => {
           <ul className="menu menu-horizontal p-0">
             {auth ? (
               <li className="mr-1">
-                <Link to="/login" className="font-bold">
+                <Link onClick={()=>logOut()} to="/login" className="font-bold">
                   Logout
                 </Link>
               </li>

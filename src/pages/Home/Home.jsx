@@ -185,30 +185,30 @@ const Home = () => {
               key={house.id}
               className="bg-slate-300 rounded-lg shadow-2xl p-4"
             >
-              <h2 className="text-xl font-bold mb-2">{house.name}</h2>
+              <h2 className="text-xl font-bold mb-2">{house?.name}</h2>
               <div className="mb-4">
                 <img
-                  src={house.picture}
-                  alt={house.name}
+                  src={house?.picture}
+                  alt={house?.name}
                   className="w-full h-auto rounded-md object-cover"
                 />
               </div>
               <p className="text-gray-700 mb-2">
-                {house.address}, {house.city}
+                {house?.address}, {house.city}
               </p>
-              <p className="text-gray-700 mb-2">Bedrooms: {house.bedrooms}</p>
-              <p className="text-gray-700 mb-2">Bathrooms: {house.bathrooms}</p>
-              <p className="text-gray-700 mb-2">Room Size: {house.roomSize}</p>
+              <p className="text-gray-700 mb-2">Bedrooms: {house?.bedrooms}</p>
+              <p className="text-gray-700 mb-2">Bathrooms: {house?.bathrooms}</p>
+              <p className="text-gray-700 mb-2">Room Size: {house?.roomSize}</p>
               <p className="text-gray-700 mb-2">
-                Availability Date: {house.availabilityDate}
-              </p>
-              <p className="text-gray-700 mb-2">
-                Rent Per Month: {house.rentPerMonth}
+                Availability Date: {house?.availabilityDate}
               </p>
               <p className="text-gray-700 mb-2">
-                Phone Number: {house.phoneNumber}
+                Rent Per Month: {house?.rentPerMonth}
               </p>
-              <p className="text-gray-700 mb-2">{house.description}</p>
+              <p className="text-gray-700 mb-2">
+                Phone Number: {house?.phoneNumber}
+              </p>
+              <p className="text-gray-700 mb-2">{house?.description}</p>
             </div>
           </>
         ))}

@@ -23,7 +23,7 @@ const useAuth = () => {
     }
   }, [data]);
 
-  return { auth, refetch, user, isLoading };
+  return { auth, refetch, user, isLoading,data };
 };
 
 export default useAuth;

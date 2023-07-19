@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
-  const { refetch } = useAuth();
+  const { refetch} = useAuth();
   const navigate=useNavigate()
   const [errorMessage, setErrorMessage] = useState("");
   const {
@@ -17,17 +17,15 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const response = await axios.post(
         "http://localhost:5000/api/v1/users/login",
         data
       );
-      console.log(response.data.token);
       localStorage.setItem("accessToken", response.data.token);
-      // Trigger the refetch function to fetch user information again
       refetch();
-      navigate("/dashboard");
+      navigate("/dashboard")
+      
       if (response.status !== 200) { // Modify this line
         toast.error("Invalid Email or Password");
       }
