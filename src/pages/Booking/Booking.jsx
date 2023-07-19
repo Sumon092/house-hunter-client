@@ -2,15 +2,14 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
-// import Loading from "../../components/Loading/Loading";
+
 
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
   const [houses, setHouses] = useState([]);
 
-  const cancelId = bookings.map((i) => i._id) || [];
-  console.log(cancelId, "cancelId");
 
+  const cancelId = bookings.map((i) => i._id) || [];
   const handleCancel = async () => {
     if (cancelId.length > 0) {
       const bookingIdToDelete = cancelId[0]; // Pick the first booking ID from the array
@@ -31,23 +30,6 @@ const Booking = () => {
     }
   };
 
-  // const handleCancel = async (id) => {
-  //   if (cancelId.length > 0) {
-  //     const bookingIdToDelete = cancelId[0];}
-  //   console.log(id, "booking id");
-  //   try {
-  //     await axios.delete(
-  //       `http://localhost:5000/api/v1/renters/cancel-booking/${id}`
-  //     );
-  //     toast.error("Booking cancelled");
-  //     {
-  //       isLoading && <Loading />;
-  //     }
-  //     refetch();
-  //   } catch (error) {
-  //     throw new Error("cancel denied");
-  //   }
-  // };
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     axios.interceptors.request.use((config) => {
@@ -69,17 +51,18 @@ const Booking = () => {
       ? bookings.map((bookedHouse) => bookedHouse.houseId)
       : [];
   }, [bookings]);
+  console.log(bookedHouses,'booked houses');
 
   const { data, refetch, isLoading, isError } = useQuery("houses", () =>
-    fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
-      res.json()
+    fetch("http://localhost:5000/api/v1/owners/houses").then(
+      (res) => res.json()
     )
   );
 
   useEffect(() => {
     if (data) {
       const filteredHouses = data?.filter((house) =>
-        bookedHouses.includes(house._id)
+        bookedHouses.includes(house._id)||[]
       );
       setHouses(filteredHouses);
     }
@@ -121,7 +104,9 @@ const Booking = () => {
             </tr>
           </thead>
           <tbody>
+            {console.log(houses)}
             {houses?.map((house) => (
+              
               <tr key={house._id}>
                 <td className="p-4">{house.name}</td>
                 <td className="p-4">{house.address}</td>

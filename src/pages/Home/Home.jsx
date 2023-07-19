@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import Loading from "../../components/Loading/Loading";
+import Pagination from "../../components/Pagination/Pagination";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 
@@ -17,17 +18,19 @@ const Home = () => {
     availability: "",
     rentPerMonth: "",
   });
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   useEffect(() => {
     fetchHouses();
-  }, []);
+  }, [currentPage,filters]);
 
   const fetchHouses = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/v1/owners/houses"
+        `http://localhost:5000/api/v1/owners/houses?page=${currentPage}&limit=10`
       );
       setHouses(response.data);
+      setTotalPages(response.data.totalPages)
     } catch (error) {
       throw new Error("Error");
     }
@@ -37,6 +40,9 @@ const Home = () => {
     const { name, value } = event.target;
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
+  const handlePageChange=(page)=>{
+setCurrentPage(page)
+  }
   const filterHouses = () => {
     let filteredHouses = houses;
 
@@ -238,6 +244,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
     </div>
   );
 };
