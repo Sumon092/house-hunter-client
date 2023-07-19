@@ -3,30 +3,20 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
 
-
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
   const [houses, setHouses] = useState([]);
 
-
-  const cancelId = bookings.map((i) => i._id) || [];
-  const handleCancel = async () => {
-    if (cancelId.length > 0) {
-      const bookingIdToDelete = cancelId[0]; // Pick the first booking ID from the array
-      try {
-        await axios.delete(
-          `http://localhost:5000/api/v1/renters/cancel-booking/${bookingIdToDelete}`
-        );
-        toast.error("Booking cancelled");
-        setBookings((prevBookings) =>
-          prevBookings.filter((booking) => booking._id !== bookingIdToDelete)
-        );
-        refetch();
-      } catch (error) {
-        throw new Error("cancel denied");
-      }
-    } else {
-      console.log("No bookings to cancel.");
+  const handleCancel = async (bookingIdToDelete) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/v1/renters/cancel-booking/${bookingIdToDelete}`);
+      toast.error("Booking cancelled");
+      setBookings((prevBookings) =>
+        prevBookings.filter((booking) => booking._id !== bookingIdToDelete)
+      );
+      refetch();
+    } catch (error) {
+      throw new Error("Cancel denied");
     }
   };
 
@@ -46,27 +36,20 @@ const Booking = () => {
       });
   }, []);
 
-  const bookedHouses = useMemo(() => {
-    return bookings.length > 0
-      ? bookings.map((bookedHouse) => bookedHouse.houseId)
-      : [];
+  const bookedHouseIds = useMemo(() => {
+    return bookings.length > 0 ? bookings.map((bookedHouse) => bookedHouse.houseId) : [];
   }, [bookings]);
-  console.log(bookedHouses,'booked houses');
 
   const { data, refetch, isLoading, isError } = useQuery("houses", () =>
-    fetch("http://localhost:5000/api/v1/owners/houses").then(
-      (res) => res.json()
-    )
+    fetch("http://localhost:5000/api/v1/owners/houses").then((res) => res.json())
   );
 
   useEffect(() => {
     if (data) {
-      const filteredHouses = data?.filter((house) =>
-        bookedHouses.includes(house._id)||[]
-      );
-      setHouses(filteredHouses);
+      const bookedHousesData = data.filter((house) => bookedHouseIds.includes(house._id));
+      setHouses(bookedHousesData);
     }
-  }, [data, bookedHouses]);
+  }, [data, bookedHouseIds]);
 
   useEffect(() => {
     refetch();
@@ -84,8 +67,8 @@ const Booking = () => {
     <div className="mt-24">
       <h2 className="text-2xl text-center font-bold mb-4">Booked Houses</h2>
 
-      {bookings?.length === 0 ? (
-        <p className="text-2xl text-center font-bold ">No houses booked yet.</p>
+      {houses.length === 0 ? (
+        <p className="text-2xl text-center font-bold">No houses booked yet.</p>
       ) : (
         <table className="w-full bg-white border border-gray-200">
           <thead>
@@ -104,9 +87,7 @@ const Booking = () => {
             </tr>
           </thead>
           <tbody>
-            {console.log(houses)}
-            {houses?.map((house) => (
-              
+            {houses.map((house) => (
               <tr key={house._id}>
                 <td className="p-4">{house.name}</td>
                 <td className="p-4">{house.address}</td>
@@ -121,9 +102,9 @@ const Booking = () => {
                 <td className="p-4">
                   <button
                     className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
-                    onClick={() => handleCancel(cancelId)}
+                    onClick={() => handleCancel(bookedHouseIds)}
                   >
-                    cancel
+                    Cancel
                   </button>
                 </td>
               </tr>
