@@ -21,7 +21,7 @@ const Login = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://house-hounter-server.vercel.app/users/login",
+        "http://localhost:5000/api/v1/users/login",
         data
       );
       localStorage.setItem("accessToken", response.data.token);

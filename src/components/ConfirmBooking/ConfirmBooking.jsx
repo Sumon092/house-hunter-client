@@ -35,7 +35,7 @@ const ConfirmBooking = () => {
     try {
       
       await axios.post(
-        `https://house-hounter-server.vercel.app/renters/addBooking`,
+        `http://localhost:5000/api/v1/renters/addBooking`,
         { ...formData, houseId },
         {
           headers: {

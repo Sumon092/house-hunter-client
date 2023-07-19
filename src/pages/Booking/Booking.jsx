@@ -1,11 +1,53 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { toast } from "react-hot-toast";
+// import Loading from "../../components/Loading/Loading";
 
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
   const [houses, setHouses] = useState([]);
 
+  const cancelId = bookings.map((i) => i._id) || [];
+  console.log(cancelId, "cancelId");
+
+  const handleCancel = async () => {
+    if (cancelId.length > 0) {
+      const bookingIdToDelete = cancelId[0]; // Pick the first booking ID from the array
+      try {
+        await axios.delete(
+          `http://localhost:5000/api/v1/renters/cancel-booking/${bookingIdToDelete}`
+        );
+        toast.error("Booking cancelled");
+        setBookings((prevBookings) =>
+          prevBookings.filter((booking) => booking._id !== bookingIdToDelete)
+        );
+        refetch();
+      } catch (error) {
+        throw new Error("cancel denied");
+      }
+    } else {
+      console.log("No bookings to cancel.");
+    }
+  };
+
+  // const handleCancel = async (id) => {
+  //   if (cancelId.length > 0) {
+  //     const bookingIdToDelete = cancelId[0];}
+  //   console.log(id, "booking id");
+  //   try {
+  //     await axios.delete(
+  //       `http://localhost:5000/api/v1/renters/cancel-booking/${id}`
+  //     );
+  //     toast.error("Booking cancelled");
+  //     {
+  //       isLoading && <Loading />;
+  //     }
+  //     refetch();
+  //   } catch (error) {
+  //     throw new Error("cancel denied");
+  //   }
+  // };
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     axios.interceptors.request.use((config) => {
@@ -13,7 +55,7 @@ const Booking = () => {
       return config;
     });
     axios
-      .get("https://house-hounter-server.vercel.app/renters/booked")
+      .get("http://localhost:5000/api/v1/renters/booked")
       .then((response) => {
         setBookings(response.data);
       })
@@ -21,37 +63,46 @@ const Booking = () => {
         console.error("Error fetching bookings data:", error);
       });
   }, []);
-  const bookedHouses = bookings.map((bookedHouse) => bookedHouse.houseId);
 
-  const { data, refetch, isLoading } = useQuery("houses", () =>
-    fetch("https://house-hounter-server.vercel.app/owners/houses").then((res) =>
+  const bookedHouses = useMemo(() => {
+    return bookings.length > 0
+      ? bookings.map((bookedHouse) => bookedHouse.houseId)
+      : [];
+  }, [bookings]);
+
+  const { data, refetch, isLoading, isError } = useQuery("houses", () =>
+    fetch("http://localhost:5000/api/v1/owners/houses").then((res) =>
       res.json()
     )
   );
 
   useEffect(() => {
     if (data) {
-      const filteredHouses = data.filter((house) =>
+      const filteredHouses = data?.filter((house) =>
         bookedHouses.includes(house._id)
       );
       setHouses(filteredHouses);
     }
   }, [data, bookedHouses]);
 
-  // Fetch houses data again on refetch
   useEffect(() => {
     refetch();
-  }, [refetch]);
+  }, [refetch, bookings]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  if (isError) {
+    return <div>Error fetching data...</div>;
+  }
+
   return (
     <div className="mt-24">
-      <h2 className="text-2xl font-bold mb-4">Booked Houses of yours</h2>
+      <h2 className="text-2xl text-center font-bold mb-4">Booked Houses</h2>
 
-      {bookings.length === 0 ? (
-        <p>No houses booked yet.</p>
+      {bookings?.length === 0 ? (
+        <p className="text-2xl text-center font-bold ">No houses booked yet.</p>
       ) : (
         <table className="w-full bg-white border border-gray-200">
           <thead>
@@ -85,7 +136,7 @@ const Booking = () => {
                 <td className="p-4">
                   <button
                     className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
-                    // onClick={() => handleDelete(house._id)}
+                    onClick={() => handleCancel(cancelId)}
                   >
                     cancel
                   </button>

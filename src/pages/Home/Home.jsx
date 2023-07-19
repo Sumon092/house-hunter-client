@@ -25,7 +25,7 @@ const Home = () => {
   const fetchHouses = async () => {
     try {
       const response = await axios.get(
-        "https://house-hounter-server.vercel.app/owners/houses"
+        "http://localhost:5000/api/v1/owners/houses"
       );
       setHouses(response.data);
     } catch (error) {
@@ -196,7 +196,7 @@ const Home = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white">
         {filterHouses().map((house) => (
           <div
-            key={house.id}
+            key={house._id}
             className="bg-slate-300 rounded-lg shadow-2xl p-4"
           >
             <h2 className="text-xl font-bold mb-2">{house?.name}</h2>

@@ -35,7 +35,7 @@ const UpdateModal = ({ house, refetch }) => {
     try {
       await axios.patch(
         // eslint-disable-next-line react/prop-types
-        `https://house-hounter-server.vercel.app/owners/updateHouse/${house._id}`,
+        `http://localhost:5000/api/v1/owners/updateHouse/${house._id}`,
         formData,
         {
           headers: {

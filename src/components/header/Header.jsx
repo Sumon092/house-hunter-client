@@ -20,17 +20,24 @@ const Header = () => {
         </div>
         <div className="flex-none">
           <ul className="menu menu-horizontal p-0">
+          
+              <li className="mr-1">
+                <Link to="/home" className="font-bold text-xl text-blue-700">
+                  Home
+                </Link>
+              </li>
+            
           {data?.role==="House Renter" && (
               <li className="mr-1">
                 <Link to="/booking" className="font-bold text-xl text-blue-700">
-                  Booking
+                  Booking DashBoard
                 </Link>
               </li>
             )}
           {data?.role==="House Owner"&&(
               <li className="mr-1">
                 <Link to="/dashboard" className="font-bold text-xl text-blue-700">
-                  Dashboard
+                  Owner Dashboard
                 </Link>
               </li>
             )}

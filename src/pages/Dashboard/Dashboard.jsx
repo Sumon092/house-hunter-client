@@ -21,7 +21,7 @@ const Dashboard2 = () => {
   
     try {
       axios
-        .get("https://house-hounter-server.vercel.app/users/user")
+        .get("http://localhost:5000/api/v1/users/user")
         .then((response) => {
           setOwners(response.data);
         })
@@ -33,13 +33,11 @@ const Dashboard2 = () => {
     }
   }, []);
   
-  const houseOwner= owners.ownedHouses
-  console.log(houseOwner);
   // !
   
   const { data, refetch ,isLoading} = useQuery("houses", () =>
   
-    fetch(`https://house-hounter-server.vercel.app/owners/houses`).then((res) =>
+    fetch(`http://localhost:5000/api/v1/owners/houses`).then((res) =>
       res.json()
     )
   );
@@ -57,9 +55,10 @@ const Dashboard2 = () => {
   
   
   const handleDelete = async (houseId) => {
+    console.log(houseId,'houseId');
     try {
       await axios.delete(
-        `https://house-hounter-server.vercel.app/owners/deleteHouse/${houseId}`
+        `http://localhost:5000/api/v1/owners/deleteHouse/${houseId}`
       );
       
     } catch (error) {
@@ -148,3 +147,4 @@ const Dashboard2 = () => {
   );
 };
 export default Dashboard2;
+
