@@ -4,9 +4,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import Loading from "../components/Loading/Loading";
 
 const Login = () => {
   const { refetch} = useAuth();
+  const [isLoading,setIsLoading]=useState(false)
   const navigate=useNavigate()
   const [errorMessage, setErrorMessage] = useState("");
   const {
@@ -17,14 +19,23 @@ const Login = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
+      setIsLoading(true);
+      console.log(isLoading,'isloading');
       const response = await axios.post(
         "http://localhost:5000/api/v1/users/login",
         data
       );
       localStorage.setItem("accessToken", response.data.token);
       refetch();
-      toast.success("Login Successful")
-      navigate("/dashboard")
+      
+      console.log(response.data,'data');
+      if (response.data?.role === "House Owner") {
+        console.log('going to dashboard');
+        navigate("/dashboard");
+      } else {
+        console.log('going to booking');
+        navigate("/bookings");
+      }
       
       if (response.status !== 200) { // Modify this line
         toast.error("Invalid Email or Password");
@@ -33,6 +44,9 @@ const Login = () => {
       if (error.response.status === 401) {
         setErrorMessage("Invalid email or password.");
       }
+    } finally {
+      setIsLoading(false);
+      console.log(isLoading,'isloading');
     }
     reset();
   };
@@ -40,6 +54,7 @@ const Login = () => {
   
   return (
     <div className="flex h-screen justify-center items-center ">
+       {isLoading && <Loading />}
       <div className="card bg-teal-300 shadow-2xl p-6">
         <div className="card-body">
           <h2 className="text-center text-2xl font-bold mb-6">

@@ -16,6 +16,7 @@ export const RequireContext = createContext(null);
 
 function App() {
   const { auth, refetch, user,data } = useAuth();
+  
   return (
     <>
     <div className=" bg-slate-400">

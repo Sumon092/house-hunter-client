@@ -25,7 +25,7 @@ const Modal = () => {
     refetch()
     
     } catch (error) {
-      console.log(error);
+      
       toast.error("Failed to add house.");
     }
   };

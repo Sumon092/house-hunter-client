@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 
 const Home = () => {
+  const { data } = useAuth();
   const [houses, setHouses] = useState([]);
   const [filters, setFilters] = useState({
     city: "",
@@ -14,12 +16,10 @@ const Home = () => {
     availability: "",
     rentPerMonth: "",
   });
-  
+
   useEffect(() => {
     fetchHouses();
   }, []);
-
-  
 
   const fetchHouses = async () => {
     try {
@@ -28,15 +28,15 @@ const Home = () => {
       );
       setHouses(response.data);
     } catch (error) {
-      console.log(error);
+      throw new Error("Error");
     }
   };
-
+  const booked = houses.map((house) => house.booked);
+  console.log(booked, "is booked");
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
   };
-
   const filterHouses = () => {
     let filteredHouses = houses;
 
@@ -79,34 +79,19 @@ const Home = () => {
     return filteredHouses;
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const filteredHouses = filterHouses();
     console.log(filteredHouses);
   };
-  
-  // const [userId, ] = useState('');
-
-  // const navigate = useNavigate(); // Initialize useNavigate
 
   const handleBookingSubmit = (houseId) => {
     try {
-      console.log("houseId...",houseId);
-      
+      console.log("houseId...", houseId);
     } catch (error) {
       console.log("error", error);
     }
-    // You can optionally add any required data to the formData object here
-    // For example, formData.userId = userId;
-    // formData.phoneNumber = userPhoneNumber;
-
-    // Navigate to Confirm Order route with the houseId
-    
   };
-
-  
- 
 
   return (
     <div className="container mx-auto p-12 mt-8">
@@ -208,40 +193,47 @@ const Home = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white">
         {filterHouses().map((house) => (
-          <>
-            <div
-              key={house.id}
-              className="bg-slate-300 rounded-lg shadow-2xl p-4"
-            >
-              <h2 className="text-xl font-bold mb-2">{house?.name}</h2>
-              <div className="mb-4">
-                <img
-                  src={house?.picture}
-                  alt={house?.name}
-                  className="w-full h-auto rounded-md object-cover"
-                />
-              </div>
-              <p className="text-gray-700 mb-2">
-                {house?.address}, {house.city}
-              </p>
-              <p className="text-gray-700 mb-2">Bedrooms: {house?.bedrooms}</p>
-              <p className="text-gray-700 mb-2">Bathrooms: {house?.bathrooms}</p>
-              <p className="text-gray-700 mb-2">Room Size: {house?.roomSize}</p>
-              <p className="text-gray-700 mb-2">
-                Availability Date: {house?.availabilityDate}
-              </p>
-              <p className="text-gray-700 mb-2">
-                Rent Per Month: {house?.rentPerMonth}
-              </p>
-              <p className="text-gray-700 mb-2">
-                Phone Number: {house?.phoneNumber}
-              </p>
-              <p className="text-gray-700 mb-2">{house?.description}</p>
-              <Link to={`/confirm-booking/${house._id}`}   onClick={() => handleBookingSubmit({ houseId: house._id })} className="btn btn-secondary btn-sm">Book House
-              
-              </Link>
+          <div
+            key={house.id}
+            className="bg-slate-300 rounded-lg shadow-2xl p-4"
+          >
+            <h2 className="text-xl font-bold mb-2">{house?.name}</h2>
+            <div className="mb-4">
+              <img
+                src={house?.picture}
+                alt={house?.name}
+                className="w-full h-auto rounded-md object-cover"
+              />
             </div>
-          </>
+            <p className="text-gray-700 mb-2">
+              {house?.address}, {house.city}
+            </p>
+            <p className="text-gray-700 mb-2">Bedrooms: {house?.bedrooms}</p>
+            <p className="text-gray-700 mb-2">Bathrooms: {house?.bathrooms}</p>
+            <p className="text-gray-700 mb-2">Room Size: {house?.roomSize}</p>
+            <p className="text-gray-700 mb-2">
+              Availability Date: {house?.availabilityDate}
+            </p>
+            <p className="text-gray-700 mb-2">
+              Rent Per Month: {house?.rentPerMonth}
+            </p>
+            <p className="text-gray-700 mb-2">
+              Phone Number: {house?.phoneNumber}
+            </p>
+            <p className="text-gray-700 mb-2">{house?.description}</p>
+            {house.booked ? (
+              <Link className="btn btn-error btn-sm">Booked House</Link>
+            ) : (
+              <Link
+                to={`/confirm-booking/${house._id}`}
+                onClick={() => handleBookingSubmit({ houseId: house._id })}
+                className="btn btn-secondary btn-sm"
+                disabled={data?.role === "House Owner"}
+              >
+                Book House
+              </Link>
+            )}
+          </div>
         ))}
       </div>
     </div>

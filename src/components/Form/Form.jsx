@@ -461,7 +461,7 @@ const Form = ({ handleModal }) => {
           value={formData.description}
           onChange={handleInputChange}
           required
-          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
+          className="w-full border border-gray-300 p-1 rounded focus:outline-none focus:ring focus:ring-blue-500"
         ></textarea>
       </div>
       <div className="">

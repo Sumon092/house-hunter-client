@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { RequireContext } from "../../App";
-import useAuth from "../../hooks/useAuth";
+
 
 const Header = () => {
-  const { auth } = useContext(RequireContext);
-  const {data}=useAuth()
+  const { auth ,data,isLoading} = useContext(RequireContext);
+  
   
   const logOut=()=>{
     localStorage.removeItem('accessToken')
@@ -27,7 +27,7 @@ const Header = () => {
                 </Link>
               </li>
             )}
-          {data?.role==="House Owner"  && (
+          {data?.role==="House Owner"  && isLoading&&(
               <li className="mr-1">
                 <Link to="/dashboard" className="font-bold text-xl text-blue-700">
                   Dashboard

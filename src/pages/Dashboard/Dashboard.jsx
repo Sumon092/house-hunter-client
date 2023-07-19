@@ -5,14 +5,16 @@ import UpdateModal from "../../components/Modal/UpdateModal";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
+import Loading from "../../components/Loading/Loading";
 
 const Dashboard = () => {
   const [houses, setHouses] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState(null);
   const {data:ownedHouse}=useAuth()
-  console.log(ownedHouse?.ownedHouses,"owner");
+  console.log(ownedHouse?.ownedHouses._id);
   
-  const { data, refetch } = useQuery("houses", () =>
+  const { data, refetch ,isLoading} = useQuery("houses", () =>
+  
     fetch(`http://localhost:5000/api/v1/owners/houses`).then((res) =>
       res.json()
     )
@@ -22,14 +24,14 @@ const Dashboard = () => {
       setHouses(data);
     }
   }, [data]);
-  console.log(data);
+  
 
   const handleDelete = async (houseId) => {
     try {
       await axios.delete(
         `http://localhost:5000/api/v1/owners/deleteHouse/${houseId}`
       );
-      console.log("house deleted");
+      
     } catch (error) {
       throw new Error("delete denied")
     }
@@ -54,7 +56,7 @@ const Dashboard = () => {
           <Modal refetch={refetch}></Modal>
         </div>
       </div>
-      <table className="w-full bg-white border border-gray-200">
+      {isLoading ? <Loading />:( <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
             <th className="p-4">Name</th>
@@ -72,6 +74,7 @@ const Dashboard = () => {
         </thead>
         <tbody>
           {houses?.map((house) => (
+            
             <tr key={house._id}>
               <td className="p-4">{house.name}</td>
               <td className="p-4">{house.address}</td>
@@ -85,7 +88,7 @@ const Dashboard = () => {
               <td className="p-4">{house.description}</td>
               <td className="p-4">
                 <button
-                  className="bg-red-500 text-white py-4 px-4 rounded w-20 mb-2"
+                  className="bg-red-500 text-white p-1 px-2 rounded w-20 mb-2"
                   onClick={() => handleDelete(house._id)}
                 >
                   Delete
@@ -102,7 +105,8 @@ const Dashboard = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>)}
+     
       {selectedHouse && (
         <UpdateModal
           house={selectedHouse}
@@ -113,5 +117,4 @@ const Dashboard = () => {
     </div>
   );
 };
-
 export default Dashboard;

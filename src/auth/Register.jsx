@@ -22,12 +22,12 @@
           "http://localhost:5000/api/v1/users/register",
           data
         );
-        console.log(response.data.data.token);
+        
         localStorage.setItem("accessToken", response.data.data.token);
         navigate("/");
         toast.success("Registration successful")
       } catch (error) {
-        console.log(error);
+        
         if (error.response && error.response.status === 409) {
           setErrorMessage(
             "Email already exists. Please choose a different email."
