@@ -1,14 +1,17 @@
-/* eslint-disable no-undef */
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClientProvider } from 'react-query'
+import ReactDOM from 'react-dom';
+import App from './App.jsx';
+import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClientProvider } from 'react-query';
+import { QueryClient } from 'react-query';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const queryClient = new QueryClient();
+
+ReactDOM.render(
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </BrowserRouter>
-)
+  </BrowserRouter>,
+  document.getElementById('root')
+);

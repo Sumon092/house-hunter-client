@@ -4,6 +4,7 @@ import Login from "./auth/Login";
 import Home from "./pages/Home/Home";
 import { createContext } from "react";
 import useAuth from "./hooks/useAuth";
+import Layout from "./components/Layout/Layout";
 
 export const RequireContext = createContext(null);
 
@@ -12,11 +13,13 @@ function App() {
   return (
     <div>
       <RequireContext.Provider value={{ auth, user, refetch }}>
+        <Layout>
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
         </Routes>
+        </Layout>
       </RequireContext.Provider>
     </div>
   );
