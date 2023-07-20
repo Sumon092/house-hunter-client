@@ -7,6 +7,9 @@ import useAuth from "./hooks/useAuth";
 import Layout from "./components/Layout/Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import RequireAuth from "./auth/RequireAuth";
+import { Toaster } from "react-hot-toast";
+import Booking from "./pages/Booking/Booking";
+import ConfirmBooking from "./components/ConfirmBooking/ConfirmBooking";
 
 
 export const RequireContext = createContext(null);
@@ -21,7 +24,6 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />}></Route>
-
             <Route
               path="/dashboard"
               element={
@@ -30,13 +32,24 @@ function App() {
                 </RequireAuth>
               }
             ></Route>
+            <Route
+              path="/booking"
+              element={
+                <RequireAuth>
+                  <Booking />
+                </RequireAuth>
+              }
+            ></Route>
             <Route path="/register" element={<Register />}></Route>
+            
+            <Route path="/confirm-booking/:houseId" element={<RequireAuth><ConfirmBooking/></RequireAuth>} />
             <Route path="/login" element={<Login />}></Route>
           </Routes>
         </Layout>
         
       </RequireContext.Provider>
     </div>
+    <Toaster/>
     </>
   );
 }

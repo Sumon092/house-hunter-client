@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link} from "react-router-dom";
+// import { useLocation, useNavigate } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const Home = () => {
   const [houses, setHouses] = useState([]);
@@ -11,10 +14,12 @@ const Home = () => {
     availability: "",
     rentPerMonth: "",
   });
-
+  
   useEffect(() => {
     fetchHouses();
   }, []);
+
+  
 
   const fetchHouses = async () => {
     try {
@@ -74,11 +79,34 @@ const Home = () => {
     return filteredHouses;
   };
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const filteredHouses = filterHouses();
     console.log(filteredHouses);
   };
+  
+  // const [userId, ] = useState('');
+
+  // const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleBookingSubmit = (houseId) => {
+    try {
+      console.log("houseId...",houseId);
+      
+    } catch (error) {
+      console.log("error", error);
+    }
+    // You can optionally add any required data to the formData object here
+    // For example, formData.userId = userId;
+    // formData.phoneNumber = userPhoneNumber;
+
+    // Navigate to Confirm Order route with the houseId
+    
+  };
+
+  
+ 
 
   return (
     <div className="container mx-auto p-12 mt-8">
@@ -209,6 +237,9 @@ const Home = () => {
                 Phone Number: {house?.phoneNumber}
               </p>
               <p className="text-gray-700 mb-2">{house?.description}</p>
+              <Link to={`/confirm-booking/${house._id}`}   onClick={() => handleBookingSubmit({ houseId: house._id })} className="btn btn-secondary btn-sm">Book House
+              
+              </Link>
             </div>
           </>
         ))}

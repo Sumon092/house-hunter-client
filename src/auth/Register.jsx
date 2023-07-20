@@ -25,6 +25,7 @@
         console.log(response.data.data.token);
         localStorage.setItem("accessToken", response.data.data.token);
         navigate("/");
+        toast.success("Registration successful")
       } catch (error) {
         console.log(error);
         if (error.response && error.response.status === 409) {

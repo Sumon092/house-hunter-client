@@ -3,10 +3,15 @@ import axios from "axios";
 import Modal from "../../components/Modal/Modal";
 import UpdateModal from "../../components/Modal/UpdateModal";
 import { useQuery } from "react-query";
+import { toast } from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 
 const Dashboard = () => {
   const [houses, setHouses] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState(null);
+  const {data:ownedHouse}=useAuth()
+  console.log(ownedHouse?.ownedHouses,"owner");
+  
   const { data, refetch } = useQuery("houses", () =>
     fetch(`http://localhost:5000/api/v1/owners/houses`).then((res) =>
       res.json()
@@ -17,6 +22,7 @@ const Dashboard = () => {
       setHouses(data);
     }
   }, [data]);
+  console.log(data);
 
   const handleDelete = async (houseId) => {
     try {
@@ -25,9 +31,10 @@ const Dashboard = () => {
       );
       console.log("house deleted");
     } catch (error) {
-      console.log(error);
+      throw new Error("delete denied")
     }
     refetch();
+    toast.error("House Deleted")
   };
   const handleEdit = (house) => {
     setSelectedHouse(house);

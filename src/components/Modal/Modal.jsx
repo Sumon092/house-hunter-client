@@ -19,10 +19,10 @@ const Modal = () => {
                 "Content-type": "application/json",
             },
         },
-        refetch()
       );
       toast.success("House added successfully!");
-    console.log("data is saving");
+    setShowModal(false)
+    refetch()
     
     } catch (error) {
       console.log(error);
@@ -32,7 +32,6 @@ const Modal = () => {
 
   return (
     <div>
-      {/* Modal Toggle */}
       <input
         type="checkbox"
         id="house-modal"

@@ -23,6 +23,7 @@ const Login = () => {
       );
       localStorage.setItem("accessToken", response.data.token);
       refetch();
+      toast.success("Login Successful")
       navigate("/dashboard")
       
       if (response.status !== 200) { // Modify this line
